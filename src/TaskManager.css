@@ -22,6 +22,7 @@
 }
 
 .task-manager-service-buttons {
+    margin: 1%;
     display: flex;
     margin-left: auto;
     text-align: right;
