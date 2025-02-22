@@ -5,12 +5,20 @@ function AddTaskForm({ onAddTask }) {
         id: -1,
         title: "",
         description: "",
+        creationDate: Date.now().toString(),
+        isComplete: false,
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         newTask.title = newTask.title.trim();
         newTask.description = newTask.description.trim();
+        const date = new Date();
+        const isoString = date.toISOString();
+        const formattedDate = isoString
+            .replace("T", " ") // Replace "T" with a space
+            .split(".")[0]; // Remove the milliseconds
+        newTask.creationDate = formattedDate;
         if (newTask.title !== "") {
             console.log(onAddTask);
             onAddTask(newTask);

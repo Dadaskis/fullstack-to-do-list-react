@@ -14,7 +14,7 @@ function TaskManager() {
 
     const handleAddTask = (task) => {
         server.postJSON("/api/tasks.php", task, () => {
-            task.id = tasks.length;
+            task.id = tasks.length + 1;
             setTasks([...tasks, task]);
             setIsModalOpen(false);
         });

@@ -9,6 +9,8 @@ function TasksList({ tasks }) {
                     id={task.id}
                     title={task.title}
                     description={task.description}
+                    creationDate={task.creationDate}
+                    isComplete={task.isComplete}
                 />
             ))}
         </div>

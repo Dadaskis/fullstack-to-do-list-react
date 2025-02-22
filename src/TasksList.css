@@ -1,3 +1,10 @@
 .tasks-list-body {
-    
+    position: relative;
+	display: flex;
+	height: 80vh;
+	flex-direction: column;
+	overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Disable horizontal scrolling */
+    padding: 10px; /* Add some padding inside the scroll panel */
+	box-sizing: border-box;
 }

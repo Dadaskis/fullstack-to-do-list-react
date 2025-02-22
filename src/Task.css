@@ -6,9 +6,28 @@
     gap: 30px;
 }
 
+.task-body-complete {
+    background-color: rgba(10, 93, 58, 0.226);
+    margin: 5px;
+    padding: 15px;
+    display: flex;
+    gap: 30px;
+}
+
 .task-id-label {
     text-align: center;
     justify-content: center;
     margin-top: 18px;
     font-size: 20px;
+}
+
+.task-div-right {
+    margin-left: auto;
+    text-align: right;
+    justify-content: right;
+}
+
+.task-creation-date {
+    color: rgba(255, 255, 255, 0.587);
+    font-size: 12px;
 }
