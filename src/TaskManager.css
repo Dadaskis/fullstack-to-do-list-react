@@ -6,6 +6,7 @@
     text-align: center;
     justify-content: center;
     margin-top: 15px;
+    color: #00ffff;
 }
 
 .task-manager-label-body {
@@ -13,8 +14,6 @@
     justify-content: center;
     align-items: center;
     height: 50px;
-    background-color: #2a2a2a00;
-    border-radius: 10px;
     gap: 30px;
 }
 
