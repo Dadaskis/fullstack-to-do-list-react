@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/23590a94-7d25-470c-a51d-eb35f58b4365)
+![image](https://github.com/user-attachments/assets/9bba5140-4f5d-4597-b989-46e6d80be939)
 
 Frontend counterpart of "Fullstack To-Do List" project
 
