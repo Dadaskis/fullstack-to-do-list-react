@@ -3,6 +3,7 @@ import Server from "./Server";
 import Utilities from "./Utilities";
 import Modal from "./Modal";
 import AddTaskForm from "./AddTaskForm";
+import TasksList from "./TasksList";
 import "./TaskManager.css";
 
 function TaskManager() {
@@ -60,18 +61,20 @@ function TaskManager() {
                 </Modal>
 
                 {/* Display the list of tasks */}
-                <div>
-                    {tasks.map((task) => (
-                        <li key={task.id}>
-                            {task.title} - {task.description}
-                        </li>
-                    ))}
-                </div>
+                <TasksList tasks={tasks}/>
             </div>
         );
     } catch (ex) {
         console.error(ex);
-        return JSON.stringify(tasks);
+        return (
+            <>
+                <h1>Task Manager is temporarily unavailable</h1>
+                <center>
+                    <h1>Unknown error occured</h1>
+                    <h2>{JSON.stringify(tasks)}</h2>
+                </center>
+            </>
+        );
     }
 }
 
