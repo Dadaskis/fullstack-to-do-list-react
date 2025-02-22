@@ -51,41 +51,45 @@ function TaskManager() {
         );
     }
 
-    return (
-        <div>
-            <h1>Task Manager</h1>
-
-            {/* Form to add a new task */}
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="title"
-                    placeholder="Task title"
-                    value={newTask.title}
-                    onChange={handleInputChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="description"
-                    placeholder="Task description"
-                    value={newTask.description}
-                    onChange={handleInputChange}
-                    required
-                />
-                <button type="submit">Add Task</button>
-            </form>
-
-            {/* Display the list of tasks */}
+    try {
+        return (
             <div>
-                {tasks.map((task) => (
-                    <li key={task.id}>
-                        {task.title} - {task.description}
-                    </li>
-                ))}
+                <h1>Task Manager</h1>
+
+                {/* Form to add a new task */}
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        name="title"
+                        placeholder="Task title"
+                        value={newTask.title}
+                        onChange={handleInputChange}
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="description"
+                        placeholder="Task description"
+                        value={newTask.description}
+                        onChange={handleInputChange}
+                        required
+                    />
+                    <button type="submit">Add Task</button>
+                </form>
+
+                {/* Display the list of tasks */}
+                <div>
+                    {tasks.map((task) => (
+                        <li key={task.id}>
+                            {task.title} - {task.description}
+                        </li>
+                    ))}
+                </div>
             </div>
-        </div>
-    );
+        );
+    } catch {
+        return JSON.stringify(tasks);
+    }
 }
 
 export default TaskManager;
