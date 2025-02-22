@@ -14,10 +14,18 @@ function AddTaskForm({ onAddTask }) {
         newTask.title = newTask.title.trim();
         newTask.description = newTask.description.trim();
         const date = new Date();
-        const isoString = date.toISOString();
-        const formattedDate = isoString
-            .replace("T", " ") // Replace "T" with a space
-            .split(".")[0]; // Remove the milliseconds
+
+        // Get local date and time components
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed, so add 1
+        const day = String(date.getDate()).padStart(2, "0");
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const seconds = String(date.getSeconds()).padStart(2, "0");
+
+        // Format the date and time as "YYYY-MM-DD HH:MM:SS"
+        const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        
         newTask.creationDate = formattedDate;
         if (newTask.title !== "") {
             console.log(onAddTask);
@@ -32,21 +40,6 @@ function AddTaskForm({ onAddTask }) {
         setNewTask({ ...newTask, [name]: value });
     };
 
-    /*
-    // Handle form submission
-    const handleSubmit = (e) => {
-        e.preventDefault(); // Prevent page reload
-
-        // Send a POST request to add the new task
-        server.postJSON("/api/tasks.php", newTask, (data) => {
-            data.id = tasks.length;
-            // Add the new task to the state
-            setTasks([...tasks, data]);
-            // Clear the form
-            setNewTask({ id: -1, title: "", description: "" });
-        });
-    };*/
-
     return (
         <form onSubmit={handleSubmit}>
             <center>
@@ -60,9 +53,10 @@ function AddTaskForm({ onAddTask }) {
                 onChange={handleInputChange}
                 required
             />
-            <input
-                type="text"
+            <textarea
                 name="description"
+                rows="6"
+                cols="60"
                 placeholder="Task description"
                 value={newTask.description}
                 onChange={handleInputChange}

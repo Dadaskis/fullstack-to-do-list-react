@@ -1,7 +1,7 @@
 import Task from "./Task";
 import './TasksList.css'
 
-function TasksList({ tasks }) {
+function TasksList({ tasks, onCompletionChange }) {
     return (
         <div className="tasks-list-body">
             {tasks.map((task) => (
@@ -11,6 +11,7 @@ function TasksList({ tasks }) {
                     description={task.description}
                     creationDate={task.creationDate}
                     isComplete={task.isComplete}
+                    onCompletionChange={(taskID) => {onCompletionChange(taskID)}}
                 />
             ))}
         </div>

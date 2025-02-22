@@ -21,3 +21,10 @@
 .task-manager-add {
     height: 40px;
 }
+
+.task-manager-service-buttons {
+    display: flex;
+    margin-left: auto;
+    text-align: right;
+    justify-content: right;
+}

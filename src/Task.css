@@ -4,6 +4,7 @@
     padding: 15px;
     display: flex;
     gap: 30px;
+    border-left: 5px solid white;
 }
 
 .task-body-complete {
@@ -12,6 +13,7 @@
     padding: 15px;
     display: flex;
     gap: 30px;
+    border-left: 5px solid white;
 }
 
 .task-id-label {
@@ -19,6 +21,7 @@
     justify-content: center;
     margin-top: 18px;
     font-size: 20px;
+    width: 40px;
 }
 
 .task-div-right {
@@ -30,4 +33,30 @@
 .task-creation-date {
     color: rgba(255, 255, 255, 0.587);
     font-size: 12px;
+}
+
+.task-title {
+    max-width: 40vw;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-description {
+    max-width: 40vw;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-checkbox {
+    width: 100%;
+}
+
+.task-left-div {
+    background-color: rgba(0, 0, 0, 0.165);
+}
+
+.task-div-mid {
+    overflow: hidden;
 }

@@ -13,10 +13,27 @@ function TaskManager() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleAddTask = (task) => {
+        task.id = tasks.length + 1;
+        setIsModalOpen(false);
         server.postJSON("/api/tasks.php", task, () => {
-            task.id = tasks.length + 1;
             setTasks([...tasks, task]);
-            setIsModalOpen(false);
+        });
+    };
+
+    const toggleTask = (taskID) => {
+        const task = tasks[taskID - 1];
+        task.isComplete = !task.isComplete;
+        tasks[taskID - 1] = task;
+        setTasks([...tasks]);
+        let serverTask = { ...task };
+        if (serverTask.isComplete == false) {
+            serverTask.isComplete = 0;
+        } else {
+            serverTask.isComplete = 1;
+        }
+        console.dir(serverTask);
+        server.putJSON("/api/tasks.php", serverTask, () => {console.log("Sucksess")}).catch((ex) => {
+            console.error(ex);
         });
     };
 
@@ -45,12 +62,6 @@ function TaskManager() {
             <div className="task-manager-body">
                 <div className="task-manager-label-body">
                     <h1 className="task-manager-label">Task Manager</h1>
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="task-manager-add"
-                    >
-                        Add Task
-                    </button>
                 </div>
                 {/* Form to add a new task */}
                 <Modal
@@ -61,7 +72,18 @@ function TaskManager() {
                 </Modal>
 
                 {/* Display the list of tasks */}
-                <TasksList tasks={tasks}/>
+                <TasksList
+                    tasks={tasks}
+                    onCompletionChange={(taskID) => toggleTask(taskID)}
+                />
+                <div className="task-manager-service-buttons">
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="task-manager-add"
+                    >
+                        Add Task
+                    </button>
+                </div>
             </div>
         );
     } catch (ex) {

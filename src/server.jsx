@@ -20,13 +20,17 @@ class Server {
         console.error("Stack trace:", error.stack); // Log the stack trace
     }
 
-    getJSON(url, successFunc) {
-        return fetch(url, {
-            method: "GET",
+    sendJSON(url, successFunc, method, bodyData) {
+        let headers = {
+            method: method,
             headers: {
                 "Content-Type": "application/json",
             },
-        })
+        }
+        if(bodyData != undefined && bodyData != null) {
+            headers["body"] = JSON.stringify(bodyData);
+        }
+        return fetch(url, headers)
             .then((response) => {
                 return this.processResponse(response);
             })
@@ -39,24 +43,16 @@ class Server {
             });
     }
 
+    getJSON(url, successFunc) {
+        return this.sendJSON(url, successFunc, "GET");
+    }
+
     postJSON(url, data, successFunc) {
-        return fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        })
-            .then((response) => {
-                return this.processResponse(response);
-            })
-            .then((data) => {
-                successFunc(data);
-            })
-            .catch((error) => {
-                this.logError(error);
-                throw error;
-            });
+        return this.sendJSON(url, successFunc, "POST", data);
+    }
+
+    putJSON(url, data, successFunc) {
+        return this.sendJSON(url, successFunc, "PUT", data);
     }
 }
 
