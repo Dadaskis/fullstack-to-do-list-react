@@ -17,7 +17,8 @@ function TaskManager() {
         server.getJSON("/api/tasks.php", (data) => {
             Utilities.printDataDebug("Tasks data acquired", data);
             setTasks(data);
-        }).catch((error) => {
+        })
+        .catch((error) => {
             setCantConnect(true); // Set the error state if the request fails
         });
     }, [server]);
@@ -42,7 +43,7 @@ function TaskManager() {
         });
     };
 
-    if(cantConnect === true) {
+    if (cantConnect === true) {
         return (
             <>
                 <h1>Task Manager is temporarily unavailable</h1>

@@ -5,7 +5,8 @@ const Utilities = {
             // I know it's dumb, but i would like to keep it that way
             return;
         }
-        console.log(text + " :: " + JSON.stringify(data));
+        console.log("DEBUG :: " + text);
+        console.dir(data, { depth: null, colors: true });
     },
 };
 
