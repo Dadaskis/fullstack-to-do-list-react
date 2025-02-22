@@ -1,0 +1,23 @@
+.task-manager-body {
+    width: 80vw;
+}
+
+.task-manager-label {
+    text-align: center;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.task-manager-label-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    background-color: #2a2a2a00;
+    border-radius: 10px;
+    gap: 30px;
+}
+
+.task-manager-add {
+    height: 40px;
+}
