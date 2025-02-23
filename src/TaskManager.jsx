@@ -52,45 +52,42 @@ function TaskManager() {
         });
     };
 
-    const moveTask = useCallback(
-        (dragIndex, hoverIndex) => {
-            const dragItem = tasks[dragIndex];
-            const hoverItem = tasks[hoverIndex];
-            if (dragItem === hoverItem) {
-                return;
-            }
-            // Swap places of dragItem and hoverItem in the tasks array
-            setTasks((tasks) => {
-                console.log(dragIndex);
-                console.log(hoverIndex);
-                const updatedTasks = [...tasks];
-                const id0 = dragItem.id;
-                const id1 = hoverItem.id;
-                if (dragItem.index != hoverIndex) {
-                    dragItem.id = id1;
-                    hoverItem.id = id0;
-                    dragItem.index = hoverIndex;
-                    hoverItem.index = dragIndex;
-                }
-                updatedTasks[dragIndex] = hoverItem;
-                updatedTasks[hoverIndex] = dragItem;
-                //server.putJSON("/api/tasks.php", hoverItem);
-                //server.putJSON("/api/tasks.php", dragItem);
-                return updatedTasks;
+    const moveTask = useCallback((dragIndex, hoverIndex) => {
+        setTasks((prevTasks) => {
+            const updatedTasks = [...prevTasks];
+            const draggedTask = updatedTasks[dragIndex];
+            updatedTasks.splice(dragIndex, 1);
+            updatedTasks.splice(hoverIndex, 0, draggedTask);
+            updatedTasks.forEach((task, index) => {
+                task.index = index;
             });
-        },
-        [tasks]
-    );
+            return updatedTasks;
+        });
+    }, []);
+
+    const syncTasks = useCallback(() => {
+        console.dir(tasks);
+        setTasks((tasks) => {
+            tasks.forEach((task, index) => {
+                task.index = index;
+                task.indexID = index;
+            });
+            server.postJSON("/api/tasks_reorder.php", tasks);
+            return tasks;
+        });
+        //setTasks(newTasks);
+    }, [tasks]);
 
     // Fetch tasks from the PHP API
     useEffect(() => {
         server
             .getJSON("/api/tasks.php", (data) => {
                 Utilities.printDataDebug("Tasks data acquired", data);
-                setTasks(data);
-                tasks.forEach((task, index) => {
-                    task.index = index;
+                data.sort((a, b) => a.indexID - b.indexID);
+                data.forEach((task) => {
+                    task.index = task.indexID;
                 });
+                setTasks(data);
             })
             .catch((error) => {
                 setCantConnect(true); // Set the error state if the request fails
@@ -127,6 +124,7 @@ function TaskManager() {
                         moveTask={(dragIndex, hoverIndex) =>
                             moveTask(dragIndex, hoverIndex)
                         }
+                        syncTasks={() => syncTasks()}
                     />
                     <div className="task-manager-service-buttons">
                         <button

@@ -12,8 +12,12 @@ function Task({
     isComplete,
     onCompletionChange,
     moveTask,
+    syncTasks,
 }) {
     const [isChecked, setIsChecked] = useState(isComplete);
+
+    const [DNDStartIndex, setDNDStartIndex] = useState(0);
+    const [DNDEndIndex, setDNDEndIndex] = useState(0);
 
     const day = creationDate.split(" ")[0];
     const time = creationDate.split(" ")[1];
@@ -23,7 +27,7 @@ function Task({
         item: { index },
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
-        })
+        }),
     }));
 
     const [spec, dropRef] = useDrop({
@@ -42,9 +46,15 @@ function Task({
             // if dragging up, continue only when hover is bigger than middle Y
             if (dragIndex > hoverIndex && hoverActualY > hoverMiddleY) return;
 
-            moveTask(dragIndex, hoverIndex);
-            task.index = hoverIndex;
-        }
+            //moveTask(dragIndex, hoverIndex);
+            //task.index = hoverIndex;
+            setDNDStartIndex(dragIndex);
+            setDNDEndIndex(hoverIndex);
+        },
+        drop: () => {
+            moveTask(DNDStartIndex, DNDEndIndex);
+            syncTasks();
+        },
     });
 
     const ref = React.useRef(null);
@@ -52,6 +62,7 @@ function Task({
 
     return (
         <div
+            //ref={(node) => dragRef(dropRef(node))}
             ref={dragDropRef}
             className={
                 isComplete ? "task task-body-complete" : "task task-body"

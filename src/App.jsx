@@ -1,11 +1,20 @@
 import TaskManager from "./TaskManager";
 
 function App() {
-    return (
+    try{
+        return (
+            <div>
+                <TaskManager></TaskManager>
+            </div>
+        );
+    } catch(ex) {
+        console.error(ex);
         <div>
-            <TaskManager></TaskManager>
+            <h1>
+                Unexpected client-side error has occured.
+            </h1>
         </div>
-    );
+    }
 }
 
 export default App;
