@@ -18,7 +18,6 @@ function TasksList({ tasks, onCompletionChange, moveTask, updateTask }) {
                     moveTask={(dragIndex, hoverIndex) => {
                         moveTask(dragIndex, hoverIndex);
                     }}
-                    updateTask={(index, id) => {updateTask(index, id)}}
                 />
             ))}
         </div>

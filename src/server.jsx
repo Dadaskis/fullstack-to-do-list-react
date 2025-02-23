@@ -35,6 +35,9 @@ class Server {
                 return this.processResponse(response);
             })
             .then((data) => {
+                if(successFunc == undefined) {
+                    return;
+                }
                 successFunc(data);
             })
             .catch((error) => {

@@ -18,6 +18,20 @@ function TaskManager() {
         setIsModalOpen(false);
         server.postJSON("/api/tasks.php", task, (newTask) => {
             newTask.index = tasks.length - 1;
+            const date = new Date();
+
+            // Get local date and time components
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed, so add 1
+            const day = String(date.getDate()).padStart(2, "0");
+            const hours = String(date.getHours()).padStart(2, "0");
+            const minutes = String(date.getMinutes()).padStart(2, "0");
+            const seconds = String(date.getSeconds()).padStart(2, "0");
+
+            // Format the date and time as "YYYY-MM-DD HH:MM:SS"
+            const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+            newTask.creationDate = formattedDate;
             setTasks([...tasks, newTask]);
         });
     };
@@ -33,14 +47,9 @@ function TaskManager() {
         } else {
             serverTask.isComplete = 1;
         }
-        console.dir(serverTask);
-        server
-            .putJSON("/api/tasks.php", serverTask, () => {
-                console.log("Sucksess");
-            })
-            .catch((ex) => {
-                console.error(ex);
-            });
+        server.putJSON("/api/tasks.php", serverTask).catch((ex) => {
+            console.error(ex);
+        });
     };
 
     const moveTask = useCallback(
@@ -52,29 +61,26 @@ function TaskManager() {
             }
             // Swap places of dragItem and hoverItem in the tasks array
             setTasks((tasks) => {
+                console.log(dragIndex);
+                console.log(hoverIndex);
                 const updatedTasks = [...tasks];
                 const id0 = dragItem.id;
                 const id1 = hoverItem.id;
-                dragItem.id = id1;
-                hoverItem.id = id0;
+                if (dragItem.index != hoverIndex) {
+                    dragItem.id = id1;
+                    hoverItem.id = id0;
+                    dragItem.index = hoverIndex;
+                    hoverItem.index = dragIndex;
+                }
                 updatedTasks[dragIndex] = hoverItem;
                 updatedTasks[hoverIndex] = dragItem;
+                //server.putJSON("/api/tasks.php", hoverItem);
+                //server.putJSON("/api/tasks.php", dragItem);
                 return updatedTasks;
             });
         },
         [tasks]
     );
-
-    const updateTask = useCallback(
-        (index, id) => {
-            if(id != undefined) {
-                const task = tasks.find(task => task.id === id);
-                server.putJSON("/api/tasks.php", task);
-                return
-            }
-            server.putJSON("/api/tasks.php", tasks[index]);
-        }
-    )
 
     // Fetch tasks from the PHP API
     useEffect(() => {
@@ -118,10 +124,9 @@ function TaskManager() {
                     <TasksList
                         tasks={tasks}
                         onCompletionChange={(taskID) => toggleTask(taskID)}
-                        moveTask={(dragIndex, hoverIndex, syncServer) =>
-                            moveTask(dragIndex, hoverIndex, syncServer)
+                        moveTask={(dragIndex, hoverIndex) =>
+                            moveTask(dragIndex, hoverIndex)
                         }
-                        updateTask={(index, id) => updateTask(index, id)}
                     />
                     <div className="task-manager-service-buttons">
                         <button

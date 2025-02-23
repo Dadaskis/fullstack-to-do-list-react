@@ -12,7 +12,6 @@ function Task({
     isComplete,
     onCompletionChange,
     moveTask,
-    updateTask,
 }) {
     const [isChecked, setIsChecked] = useState(isComplete);
 
@@ -45,11 +44,7 @@ function Task({
 
             moveTask(dragIndex, hoverIndex);
             task.index = hoverIndex;
-        },
-        drop: (task) => {
-            updateTask(-1, id);
-            updateTask(task.index)
-        },
+        }
     });
 
     const ref = React.useRef(null);
