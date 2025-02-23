@@ -77,3 +77,13 @@
 .task-div-mid {
     overflow: hidden;
 }
+
+.task-edit-div {
+    display: flex;
+    gap: 10px;
+}
+
+.task-edit-div button {
+    font-size: 10px;
+    
+}

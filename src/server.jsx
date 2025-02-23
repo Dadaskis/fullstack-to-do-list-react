@@ -44,14 +44,17 @@ class Server {
     }
 
     getJSON(url, successFunc) {
+        console.log("Get JSON :: ", url)
         return this.sendJSON(url, successFunc, "GET");
     }
 
     postJSON(url, data, successFunc) {
+        console.log("Post JSON :: ", url, data)
         return this.sendJSON(url, successFunc, "POST", data);
     }
 
     putJSON(url, data, successFunc) {
+        console.log("Put JSON :: ", url, data)
         return this.sendJSON(url, successFunc, "PUT", data);
     }
 }

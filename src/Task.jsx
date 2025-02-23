@@ -1,24 +1,77 @@
 import "./Task.css";
-import { useState } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
+import { useDrag, useDrop } from "react-dnd";
 
-function Task({ id, title, description, creationDate, isComplete, onCompletionChange }) {
-    // <p key={id}>
-    //    {title} - {description}
-    // </p>
+function Task({
+    id,
+    index,
+    title,
+    description,
+    creationDate,
+    isComplete,
+    onCompletionChange,
+    moveTask,
+    updateTask,
+}) {
     const [isChecked, setIsChecked] = useState(isComplete);
-    const day = creationDate.split(" ")[0]
-    const time = creationDate.split(" ")[1]
+
+    const day = creationDate.split(" ")[0];
+    const time = creationDate.split(" ")[1];
+
+    const [{ isDragging }, dragRef] = useDrag(() => ({
+        type: "task",
+        item: { index },
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        })
+    }));
+
+    const [spec, dropRef] = useDrop({
+        accept: "task",
+        hover: (task, monitor) => {
+            const dragIndex = task.index;
+            const hoverIndex = index;
+            const hoverBoundingRect = ref.current?.getBoundingClientRect();
+            const hoverMiddleY =
+                (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+            const hoverActualY =
+                monitor.getClientOffset().y - hoverBoundingRect.top;
+
+            // if dragging down, continue only when hover is smaller than middle Y
+            if (dragIndex < hoverIndex && hoverActualY < hoverMiddleY) return;
+            // if dragging up, continue only when hover is bigger than middle Y
+            if (dragIndex > hoverIndex && hoverActualY > hoverMiddleY) return;
+
+            moveTask(dragIndex, hoverIndex);
+            task.index = hoverIndex;
+        },
+        drop: (task) => {
+            updateTask(-1, id);
+            updateTask(task.index)
+        },
+    });
+
+    const ref = React.useRef(null);
+    const dragDropRef = dragRef(dropRef(ref));
+
     return (
-        <div className={isComplete ? "task-body-complete" : "task-body"}>
+        <div
+            ref={dragDropRef}
+            className={
+                isComplete ? "task task-body-complete" : "task task-body"
+            }
+            style={{ opacity: isDragging ? 0.5 : 1 }}
+        >
             <div className="task-left-div">
-                <p className="task-id-label">{id}</p>
+                <p className="task-id-label">{index + 1}</p>
                 <input
                     type="checkbox"
                     className="task-checkbox"
                     checked={isChecked}
                     onChange={() => {
                         setIsChecked(!isChecked);
-                        onCompletionChange(id);
+                        onCompletionChange(index);
                     }}
                 />
             </div>
@@ -29,6 +82,10 @@ function Task({ id, title, description, creationDate, isComplete, onCompletionCh
             <div className="task-div-right">
                 <p className="task-creation-date">{day}</p>
                 <p className="task-creation-date">{time}</p>
+                <div className="task-edit-div">
+                    <button>E</button>
+                    <button>×</button>
+                </div>
             </div>
         </div>
     );
