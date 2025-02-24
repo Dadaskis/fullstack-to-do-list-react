@@ -11,7 +11,7 @@ function TasksList({ tasks, onCompletionChange, moveTask, syncTasks }) {
                 return (
                     <Task
                         id={task.id}
-                        index={task.index}
+                        index={index}
                         title={task.title}
                         description={task.description}
                         creationDate={task.creationDate}
@@ -23,6 +23,15 @@ function TasksList({ tasks, onCompletionChange, moveTask, syncTasks }) {
                             moveTask(dragIndex, hoverIndex);
                         }}
                         syncTasks={() => syncTasks()}
+                        taskCount={tasks.length}
+                        moveUp={(index) => {
+                            moveTask(index, index - 1);
+                            syncTasks();
+                        }}
+                        moveDown={(index) => {
+                            moveTask(index, index + 1);
+                            syncTasks();
+                        }}
                     />
                 );
             })}

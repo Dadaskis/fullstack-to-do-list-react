@@ -50,6 +50,14 @@ h1 {
     text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
 }
 
+h2 {
+    font-size: 22px;
+    background: linear-gradient(45deg, #ffffff, #00ffaa);
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 30px rgba(75, 75, 75, 0.5);
+}
+
 /* Button Styles with Gradient and Glow */
 button {
     background: linear-gradient(45deg, #00ffff, #00ffaa);
@@ -119,12 +127,20 @@ input::placeholder {
         font-size: 2rem;
     }
 
+    h2 {
+        font-size: 18px;
+    }
+
+    p {
+        font-size: 12px;
+    }
+
     .App {
         padding: 15px;
     }
 
     button {
-        padding: 8px 16px;
+        padding: 8px 8px;
         font-size: 0.9rem;
     }
 }

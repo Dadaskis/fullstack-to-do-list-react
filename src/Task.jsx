@@ -1,18 +1,24 @@
 import "./Task.css";
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import { motion } from "framer-motion";
 
 function Task({
+    // Args
     id,
     index,
     title,
     description,
     creationDate,
     isComplete,
-    onCompletionChange,
     moveTask,
+    taskCount,
+    // Callbacks
     syncTasks,
+    onCompletionChange,
+    moveUp,
+    moveDown,
 }) {
     const [isChecked, setIsChecked] = useState(isComplete);
 
@@ -61,38 +67,73 @@ function Task({
     const dragDropRef = dragRef(dropRef(ref));
 
     return (
-        <div
-            //ref={(node) => dragRef(dropRef(node))}
-            ref={dragDropRef}
-            className={
-                isComplete ? "task task-body-complete" : "task task-body"
-            }
-            style={{ opacity: isDragging ? 0.5 : 1 }}
-        >
-            <div className="task-left-div">
-                <p className="task-id-label">{index + 1}</p>
-                <input
-                    type="checkbox"
-                    className="task-checkbox"
-                    checked={isChecked}
-                    onChange={() => {
-                        setIsChecked(!isChecked);
-                        onCompletionChange(index);
-                    }}
-                />
-            </div>
-            <div className="task-div-mid">
-                <h2 className="task-title">{title}</h2>
-                <p className="task-description">{description}</p>
-            </div>
-            <div className="task-div-right">
-                <p className="task-creation-date">{day}</p>
-                <p className="task-creation-date">{time}</p>
-                <div className="task-edit-div">
-                    <button>E</button>
-                    <button>×</button>
+        <div>
+            <motion.div
+                key={id}
+                layoutId={id} // Add this line
+                initial={{ x: 0, y: 1, opacity: 1 }}
+                animate={{ x: 0, y: 0, opacity: 1 }}
+                exit={{ x: 0, y: -1, opacity: 1 }}
+                transition={{ duration: 0.3 }}
+                layout
+            >
+                <div
+                    //ref={(node) => dragRef(dropRef(node))}
+                    ref={dragDropRef}
+                    className={
+                        isComplete
+                            ? "task task-body-complete"
+                            : "task task-body"
+                    }
+                    style={{ opacity: isDragging ? 0.5 : 1 }}
+                >
+                    <div className="task-left-div">
+                        <p className="task-id-label">{index + 1}</p>
+                        <input
+                            type="checkbox"
+                            className="task-checkbox"
+                            checked={isChecked}
+                            onChange={() => {
+                                setIsChecked(!isChecked);
+                                onCompletionChange(index);
+                            }}
+                        />
+                    </div>
+                    <div className="task-move-div">
+                        <button
+                            className="task-move-button"
+                            style={{
+                                display: index >= 1 ? "inline" : "none",
+                            }}
+                            onClick={() => moveUp(index)}
+                        >
+                            ↑
+                        </button>
+                        <button
+                            className="task-move-button"
+                            style={{
+                                display:
+                                    index <= taskCount - 2 ? "inline" : "none",
+                            }}
+                            onClick={() => moveDown(index)}
+                        >
+                            ↓
+                        </button>
+                    </div>
+                    <div className="task-div-mid">
+                        <h2 className="task-title">{title}</h2>
+                        <p className="task-description">{description}</p>
+                    </div>
+                    <div className="task-div-right">
+                        <p className="task-creation-date">{day}</p>
+                        <p className="task-creation-date">{time}</p>
+                        <div className="task-edit-div">
+                            <button>Edit</button>
+                            <button className="task-delete-button">×</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 }
