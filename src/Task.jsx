@@ -1,6 +1,6 @@
 import "./Task.css";
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { motion } from "framer-motion";
 
@@ -73,6 +73,7 @@ function Task({
     moveDown,
     onDelete,
     onEdit,
+    onMobileDelete
 }) {
     const [isChecked, setIsChecked] = useState(isComplete);
 
@@ -122,8 +123,28 @@ function Task({
 
     const [showModal, setShowModal] = useState(false);
     const [buttonPosition, setButtonPosition] = useState({ top: 0, left: 0 });
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
+    // Update screen width on resize
+    useEffect(() => {
+        const handleResize = () => {
+            setScreenWidth(window.innerWidth);
+        };
+
+        // Add event listener for window resize
+        window.addEventListener("resize", handleResize);
+
+        // Cleanup the event listener on component unmount
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     const handleDeleteClick = (event) => {
+        if (screenWidth <= 600) {
+            onMobileDelete(index, title);
+            return;
+        }
         const buttonRect = event.target.getBoundingClientRect();
         setButtonPosition({
             top: buttonRect.top + window.scrollY, // Global Y position
@@ -184,7 +205,15 @@ function Task({
                     </div>
                     <div className="task-div-mid">
                         <h2 className="task-title">{title}</h2>
-                        <p className="task-description">{description}</p>
+                        <p className="task-description">
+                            {(() => {
+                                const split = description.split("\n");
+                                if (split.length > 0) {
+                                    return split[0];
+                                }
+                                return description;
+                            })()}
+                        </p>
                     </div>
                     <div className="task-div-right">
                         <p className="task-creation-date">{day}</p>

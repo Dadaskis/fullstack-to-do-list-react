@@ -42,7 +42,7 @@ function AddTaskForm({ onAddTask }) {
             />
             <textarea
                 name="description"
-                rows="6"
+                rows="12"
                 cols="60"
                 placeholder="Task description"
                 value={newTask.description}

@@ -7,7 +7,8 @@ function TasksList({
     moveTask,
     syncTasks,
     onDelete,
-    onEdit
+    onEdit,
+    onMobileDelete
 }) {
     return (
         <div className="tasks-list-body">
@@ -43,6 +44,7 @@ function TasksList({
                             onDelete(index);
                         }}
                         onEdit={(index) => onEdit(index)}
+                        onMobileDelete={(index, title) => onMobileDelete(index, title)}
                     />
                 );
             })}

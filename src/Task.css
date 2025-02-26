@@ -183,9 +183,21 @@
     gap: 40px;
 }
 
+.task-delete-modal-div-buttons-mobile {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 40px;
+}
+
 .task-delete-modal-div-btn  {
     font-size: 13px;
     padding: 4px 20px;
+}
+
+.task-delete-modal-div-btn-mobile {
+    font-size: 20px;
+    padding: 8px 40px;
 }
 
 .task-delete-modal-div-confirm-btn {
@@ -240,6 +252,12 @@
 
     .task-title {
         max-width: fit-content;
-        font-size: 20px;
+        font-size: 16px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0);
+        background-color: #000;
+        background: #00000000;
+        white-space: wrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }

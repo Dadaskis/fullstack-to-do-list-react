@@ -4,6 +4,7 @@ import Utilities from "./Utilities";
 import Modal from "./Modal";
 import AddTaskForm from "./AddTaskForm";
 import EditTaskForm from "./EditTaskForm";
+import RemoveTaskForm from "./RemoveTaskForm";
 import TasksList from "./TasksList";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -15,7 +16,10 @@ function TaskManager() {
     const [cantConnect, setCantConnect] = useState(false);
     const [isAddFormOpen, setIsAddFormOpen] = useState(false);
     const [isEditFormOpen, setIsEditFormOpen] = useState(false);
-    const [editedTaskIndex, setEditedTaskIndex] = useState(0);
+    const [isMobileDeleteFormOpen, setIsMobileDeleteFormOpen] = useState(false);
+    const [editedTaskIndex, setEditedTaskIndex] = useState(-1);
+    const [removeTaskIndex, setRemoveTaskIndex] = useState(-1);
+    const [removeTaskTitle, setRemoveTaskTitle] = useState("");
 
     const handleAddTask = (task) => {
         task.indexID = tasks.length;
@@ -40,9 +44,14 @@ function TaskManager() {
         });
     };
 
-    const handleEditTask = (task, index) => {
-        
-    }
+    const handleEditTask = (index, task) => {
+        tasks[index].title = task.title;
+        tasks[index].description = task.description;
+        setIsEditFormOpen(false);
+        setEditedTaskIndex(-1);
+        server.putJSON("/api/tasks.php", tasks[index]);
+        setTasks([...tasks]);
+    };
 
     const toggleTask = (taskIndex) => {
         const task = tasks[taskIndex];
@@ -99,6 +108,12 @@ function TaskManager() {
         setIsEditFormOpen(true);
     });
 
+    const deleteTaskMobile = useCallback((index, title) => {
+        setRemoveTaskIndex(index);
+        setRemoveTaskTitle(title);
+        setIsMobileDeleteFormOpen(true);
+    });
+
     // Fetch tasks from the PHP API
     useEffect(() => {
         server
@@ -138,13 +153,32 @@ function TaskManager() {
                         <AddTaskForm onAddTask={handleAddTask} />
                     </Modal>
 
+                    {/* Form to edit a task */}
                     <Modal
                         isOpen={isEditFormOpen}
                         onClose={() => setIsEditFormOpen(false)}
                     >
                         <EditTaskForm
-                            onEditTask={() => handleEditTask}
+                            onEditTask={(index, task) =>
+                                handleEditTask(index, task)
+                            }
                             taskIndex={editedTaskIndex}
+                            tasks={tasks}
+                        />
+                    </Modal>
+
+                    {/* Form to remove a task /// MOBILE ONLY */}
+                    <Modal
+                        isOpen={isMobileDeleteFormOpen}
+                        onClose={() => setIsMobileDeleteFormOpen(false)}
+                    >
+                        <RemoveTaskForm
+                            onRemoveTask={() => {
+                                setIsMobileDeleteFormOpen(false);
+                                deleteTask(removeTaskIndex);
+                            }}
+                            title={removeTaskTitle}
+                            onCancel={() => setIsMobileDeleteFormOpen(false)}
                         />
                     </Modal>
 
@@ -161,6 +195,9 @@ function TaskManager() {
                         }}
                         onEdit={(index) => {
                             editTask(index);
+                        }}
+                        onMobileDelete={(index, title) => {
+                            deleteTaskMobile(index, title);
                         }}
                     />
                     <div className="task-manager-service-buttons">

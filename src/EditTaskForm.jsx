@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 
-function EditTaskForm({ onEditTask, taskIndex }) {
+function EditTaskForm({ onEditTask, taskIndex, tasks }) {
     const [task, setTask] = useState({
         title: "",
-        description: ""
+        originalTitle: "",
+        description: "",
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         task.title = task.title.trim();
         task.description = task.description.trim();
-        
+
         if (task.title !== "") {
             onEditTask(taskIndex, task);
-            setTask({ id: -1, title: "", description: "" });
+            setTask({ title: "", originalTitle: "", description: "" });
         }
     };
 
@@ -22,6 +23,14 @@ function EditTaskForm({ onEditTask, taskIndex }) {
         const { name, value } = e.target;
         setTask({ ...task, [name]: value });
     };
+
+    if (taskIndex != -1) {
+        if (task.originalTitle == "") {
+            task.title = tasks[taskIndex].title;
+            task.originalTitle = tasks[taskIndex].title;
+            task.description = tasks[taskIndex].description;
+        }
+    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -38,14 +47,14 @@ function EditTaskForm({ onEditTask, taskIndex }) {
             />
             <textarea
                 name="description"
-                rows="6"
+                rows="12"
                 cols="60"
                 placeholder="Task description"
                 value={task.description}
                 onChange={handleInputChange}
                 required
             />
-            <button type="submit">Add Task</button>
+            <button type="submit">Edit Task</button>
         </form>
     );
 }
