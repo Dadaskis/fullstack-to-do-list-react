@@ -3,6 +3,8 @@
     padding: 5px;
     display: flex;
     gap: 20px;
+    width: 100%;
+    height: 100%;
 }
 
 .task-body {
@@ -108,6 +110,7 @@
     color: #000;
     border: none;
     padding: 5px 5px;
+    margin: 2px;
     font-size: 1rem;
     border-radius: 5px;
     cursor: pointer;
@@ -121,21 +124,30 @@
     transform: scale(1.05);
 }
 
+.task-move-button-disabled {
+    background: linear-gradient(45deg, #616161, #3d4945);
+    color: #000;
+    border: none;
+    padding: 5px 5px;
+    margin: 2px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 2px rgba(78, 92, 92, 0.5);
+}
+
+.task-move-button-disabled:hover {
+    background: linear-gradient(45deg, #69887d, #3f6767);
+    box-shadow: 0 0 5px rgba(79, 103, 103, 0.7);
+    transform: scale(0.9);
+}
+
 .task-move-div {
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 5px;
-    height: 100%;
-}
-
-.task-motion-div {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
     height: 100%;
 }
 

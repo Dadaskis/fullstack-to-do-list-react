@@ -4,6 +4,66 @@ import { useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { motion } from "framer-motion";
 
+function TaskMoveButtons({
+    // Args
+    index,
+    taskCount,
+    // Callbacks
+    moveUp,
+    moveDown,
+}) {
+    if (index >= 1 && index <= taskCount - 2) {
+        return (
+            <>
+                <button
+                    className="task-move-button"
+                    onClick={() => moveUp(index)}
+                >
+                    ↑
+                </button>
+                <button
+                    className="task-move-button"
+                    onClick={() => moveDown(index)}
+                >
+                    ↓
+                </button>
+            </>
+        );
+    } else if (index <= 1) {
+        return (
+            <>
+                <button
+                    className="task-move-button-disabled"
+                >
+                    ↑
+                </button>
+                <button
+                    className="task-move-button"
+                    onClick={() => moveDown(index)}
+                >
+                    ↓
+                </button>
+            </>
+        );
+    } else if (index >= taskCount - 2) { 
+        return (
+            <>
+                <button
+                    className="task-move-button"
+                    onClick={() => moveUp(index)}
+                >
+                    ↑
+                </button>
+                <button
+                    className="task-move-button-disabled"
+                >
+                    ↓
+                </button>
+            </>
+        );
+    }
+}
+
 function Task({
     // Args
     id,
@@ -100,25 +160,12 @@ function Task({
                         />
                     </div>
                     <div className="task-move-div">
-                        <button
-                            className="task-move-button"
-                            style={{
-                                display: index >= 1 ? "inline" : "none",
-                            }}
-                            onClick={() => moveUp(index)}
-                        >
-                            ↑
-                        </button>
-                        <button
-                            className="task-move-button"
-                            style={{
-                                display:
-                                    index <= taskCount - 2 ? "inline" : "none",
-                            }}
-                            onClick={() => moveDown(index)}
-                        >
-                            ↓
-                        </button>
+                        <TaskMoveButtons
+                            index={index}
+                            taskCount={taskCount}
+                            moveUp={moveUp}
+                            moveDown={moveDown}
+                        />
                     </div>
                     <div className="task-div-mid">
                         <h2 className="task-title">{title}</h2>
