@@ -3,6 +3,7 @@ import Server from "./Server";
 import Utilities from "./Utilities";
 import Modal from "./Modal";
 import AddTaskForm from "./AddTaskForm";
+import EditTaskForm from "./EditTaskForm";
 import TasksList from "./TasksList";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -13,6 +14,8 @@ function TaskManager() {
     const [server] = useState(new Server());
     const [cantConnect, setCantConnect] = useState(false);
     const [isAddFormOpen, setIsAddFormOpen] = useState(false);
+    const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+    const [editedTaskIndex, setEditedTaskIndex] = useState(0);
 
     const handleAddTask = (task) => {
         task.indexID = tasks.length;
@@ -36,6 +39,10 @@ function TaskManager() {
             setTasks([...tasks, newTask]);
         });
     };
+
+    const handleEditTask = (task, index) => {
+        
+    }
 
     const toggleTask = (taskIndex) => {
         const task = tasks[taskIndex];
@@ -81,12 +88,15 @@ function TaskManager() {
 
     const deleteTask = useCallback((index) => {
         const task = tasks[index];
-        console.log("DELETING STUFF")
-        console.log(task);
         const newTasks = [...tasks];
         newTasks.splice(index, 1);
         setTasks(newTasks);
         server.deleteJSON("/api/tasks.php?id=" + task.id);
+    });
+
+    const editTask = useCallback((index) => {
+        setEditedTaskIndex(index);
+        setIsEditFormOpen(true);
     });
 
     // Fetch tasks from the PHP API
@@ -128,6 +138,16 @@ function TaskManager() {
                         <AddTaskForm onAddTask={handleAddTask} />
                     </Modal>
 
+                    <Modal
+                        isOpen={isEditFormOpen}
+                        onClose={() => setIsEditFormOpen(false)}
+                    >
+                        <EditTaskForm
+                            onEditTask={() => handleEditTask}
+                            taskIndex={editedTaskIndex}
+                        />
+                    </Modal>
+
                     {/* Display the list of tasks */}
                     <TasksList
                         tasks={tasks}
@@ -138,6 +158,9 @@ function TaskManager() {
                         syncTasks={() => syncTasks()}
                         onDelete={(index) => {
                             deleteTask(index);
+                        }}
+                        onEdit={(index) => {
+                            editTask(index);
                         }}
                     />
                     <div className="task-manager-service-buttons">

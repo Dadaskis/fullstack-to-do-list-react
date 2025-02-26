@@ -72,6 +72,7 @@ function Task({
     moveUp,
     moveDown,
     onDelete,
+    onEdit,
 }) {
     const [isChecked, setIsChecked] = useState(isComplete);
 
@@ -124,24 +125,9 @@ function Task({
 
     const handleDeleteClick = (event) => {
         const buttonRect = event.target.getBoundingClientRect();
-        let scrollTop = window.scrollY;
-        let scrollLeft = window.scrollX;
-
-        // Adjust for nested scrollable containers
-        let parent = event.target.parentElement;
-        while (parent) {
-            if (parent.scrollHeight > parent.clientHeight) {
-                scrollTop += parent.scrollTop;
-            }
-            if (parent.scrollWidth > parent.clientWidth) {
-                scrollLeft += parent.scrollLeft;
-            }
-            parent = parent.parentElement;
-        }
-
         setButtonPosition({
-            top: buttonRect.top + scrollTop,
-            left: buttonRect.left + scrollLeft,
+            top: buttonRect.top + window.scrollY, // Global Y position
+            left: buttonRect.left + window.scrollX, // Global X position
         });
         setShowModal(true);
     };
@@ -159,7 +145,7 @@ function Task({
         <div>
             <motion.div
                 key={id}
-                layoutId={id} // Add this line
+                layoutId={id}
                 initial={{ x: 0, y: 1, opacity: 1 }}
                 animate={{ x: 0, y: 0, opacity: 1 }}
                 exit={{ x: 0, y: -1, opacity: 1 }}
@@ -204,7 +190,7 @@ function Task({
                         <p className="task-creation-date">{day}</p>
                         <p className="task-creation-date">{time}</p>
                         <div className="task-edit-div">
-                            <button>Edit</button>
+                            <button onClick={() => onEdit(index)}>Edit</button>
                             <button
                                 className="task-delete-button"
                                 //onClick={() => onDelete(index)}
@@ -219,12 +205,20 @@ function Task({
                             className="task-delete-modal-overlay"
                             onClick={cancelDelete}
                         >
-                            <div
+                            <motion.div
                                 className="task-delete-modal"
                                 style={{
-                                    top: buttonPosition.top - 320,
+                                    top: buttonPosition.top - 120,
                                     left: buttonPosition.left - 100,
                                 }}
+                                initial={{ opacity: 0, scale: 0.8 }} // Initial state
+                                animate={{ opacity: 1, scale: 1 }} // Target state
+                                exit={{ opacity: 0, scale: 0.8 }} // Exit state (optional)
+                                transition={{
+                                    type: "spring",
+                                    stiffness: 1200,
+                                    damping: 24,
+                                }} // Animation settings
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 <p>
@@ -244,7 +238,7 @@ function Task({
                                         ✗
                                     </button>
                                 </div>
-                            </div>
+                            </motion.div>
                         </div>
                     )}
                 </div>
