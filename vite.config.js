@@ -7,7 +7,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://localhost/fullstack-to-do-list',
+        //target: 'https://localhost/fullstack-to-do-list',
+        target: 'http://dadaskis-task-manager.mooo.com',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ''),
