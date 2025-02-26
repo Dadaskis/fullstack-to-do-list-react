@@ -222,20 +222,26 @@ function Task({
                             <div
                                 className="task-delete-modal"
                                 style={{
-                                    top: buttonPosition.top - 300,
-                                    left: buttonPosition.left - 300,
+                                    top: buttonPosition.top - 320,
+                                    left: buttonPosition.left - 100,
                                 }}
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 <p>
                                     Are you sure you want to delete this task?
                                 </p>
-                                <div>
-                                    <button onClick={confirmDelete}>
-                                        Delete
+                                <div className="task-delete-modal-div-buttons">
+                                    <button
+                                        className="task-delete-modal-div-btn task-delete-modal-div-confirm-btn"
+                                        onClick={confirmDelete}
+                                    >
+                                        ✓
                                     </button>
-                                    <button onClick={cancelDelete}>
-                                        Cancel
+                                    <button
+                                        className="task-delete-modal-div-btn task-delete-modal-div-cancel-btn"
+                                        onClick={cancelDelete}
+                                    >
+                                        ✗
                                     </button>
                                 </div>
                             </div>
