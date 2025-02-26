@@ -60,6 +60,11 @@ class Server {
         console.log("Put JSON :: ", url, data)
         return this.sendJSON(url, successFunc, "PUT", data);
     }
+
+    deleteJSON(url, data, successFunc) {
+        console.log("Delete JSON :: ", url, data)
+        return this.sendJSON(url, successFunc, "DELETE", data);
+    }
 }
 
 export default Server;

@@ -1,7 +1,13 @@
 import Task from "./Task";
 import "./TasksList.css";
 
-function TasksList({ tasks, onCompletionChange, moveTask, syncTasks }) {
+function TasksList({
+    tasks,
+    onCompletionChange,
+    moveTask,
+    syncTasks,
+    onDelete,
+}) {
     return (
         <div className="tasks-list-body">
             {tasks.map((task, index) => {
@@ -31,6 +37,9 @@ function TasksList({ tasks, onCompletionChange, moveTask, syncTasks }) {
                         moveDown={(index) => {
                             moveTask(index, index + 1);
                             syncTasks();
+                        }}
+                        onDelete={(index) => {
+                            onDelete(index);
                         }}
                     />
                 );

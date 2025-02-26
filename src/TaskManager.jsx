@@ -19,7 +19,7 @@ function TaskManager() {
         setIsAddFormOpen(false);
         server.postJSON("/api/tasks.php", task, (newTask) => {
             const date = new Date();
-            
+
             // Get local date and time components
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed, so add 1
@@ -27,10 +27,10 @@ function TaskManager() {
             const hours = String(date.getHours()).padStart(2, "0");
             const minutes = String(date.getMinutes()).padStart(2, "0");
             const seconds = String(date.getSeconds()).padStart(2, "0");
-            
+
             // Format the date and time as "YYYY-MM-DD HH:MM:SS"
             const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-            
+
             newTask.index = tasks.length;
             newTask.creationDate = formattedDate;
             setTasks([...tasks, newTask]);
@@ -79,6 +79,16 @@ function TaskManager() {
         //setTasks(newTasks);
     }, [tasks]);
 
+    const deleteTask = useCallback((index) => {
+        const task = tasks[index];
+        console.log("DELETING STUFF")
+        console.log(task);
+        const newTasks = [...tasks];
+        newTasks.splice(index, 1);
+        setTasks(newTasks);
+        server.deleteJSON("/api/tasks.php?id=" + task.id);
+    });
+
     // Fetch tasks from the PHP API
     useEffect(() => {
         server
@@ -126,6 +136,9 @@ function TaskManager() {
                             moveTask(dragIndex, hoverIndex)
                         }
                         syncTasks={() => syncTasks()}
+                        onDelete={(index) => {
+                            deleteTask(index);
+                        }}
                     />
                     <div className="task-manager-service-buttons">
                         <button

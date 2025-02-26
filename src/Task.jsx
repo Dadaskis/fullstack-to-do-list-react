@@ -32,11 +32,7 @@ function TaskMoveButtons({
     } else if (index <= 1) {
         return (
             <>
-                <button
-                    className="task-move-button-disabled"
-                >
-                    ↑
-                </button>
+                <button className="task-move-button-disabled">↑</button>
                 <button
                     className="task-move-button"
                     onClick={() => moveDown(index)}
@@ -45,7 +41,7 @@ function TaskMoveButtons({
                 </button>
             </>
         );
-    } else if (index >= taskCount - 2) { 
+    } else if (index >= taskCount - 2) {
         return (
             <>
                 <button
@@ -54,11 +50,7 @@ function TaskMoveButtons({
                 >
                     ↑
                 </button>
-                <button
-                    className="task-move-button-disabled"
-                >
-                    ↓
-                </button>
+                <button className="task-move-button-disabled">↓</button>
             </>
         );
     }
@@ -79,6 +71,7 @@ function Task({
     onCompletionChange,
     moveUp,
     moveDown,
+    onDelete,
 }) {
     const [isChecked, setIsChecked] = useState(isComplete);
 
@@ -125,6 +118,42 @@ function Task({
 
     const ref = React.useRef(null);
     const dragDropRef = dragRef(dropRef(ref));
+
+    const [showModal, setShowModal] = useState(false);
+    const [buttonPosition, setButtonPosition] = useState({ top: 0, left: 0 });
+
+    const handleDeleteClick = (event) => {
+        const buttonRect = event.target.getBoundingClientRect();
+        let scrollTop = window.scrollY;
+        let scrollLeft = window.scrollX;
+
+        // Adjust for nested scrollable containers
+        let parent = event.target.parentElement;
+        while (parent) {
+            if (parent.scrollHeight > parent.clientHeight) {
+                scrollTop += parent.scrollTop;
+            }
+            if (parent.scrollWidth > parent.clientWidth) {
+                scrollLeft += parent.scrollLeft;
+            }
+            parent = parent.parentElement;
+        }
+
+        setButtonPosition({
+            top: buttonRect.top + scrollTop,
+            left: buttonRect.left + scrollLeft,
+        });
+        setShowModal(true);
+    };
+
+    const confirmDelete = () => {
+        setShowModal(false);
+        onDelete(index);
+    };
+
+    const cancelDelete = () => {
+        setShowModal(false);
+    };
 
     return (
         <div>
@@ -176,9 +205,42 @@ function Task({
                         <p className="task-creation-date">{time}</p>
                         <div className="task-edit-div">
                             <button>Edit</button>
-                            <button className="task-delete-button">×</button>
+                            <button
+                                className="task-delete-button"
+                                //onClick={() => onDelete(index)}
+                                onClick={(e) => handleDeleteClick(e)}
+                            >
+                                ×
+                            </button>
                         </div>
                     </div>
+                    {showModal && (
+                        <div
+                            className="task-delete-modal-overlay"
+                            onClick={cancelDelete}
+                        >
+                            <div
+                                className="task-delete-modal"
+                                style={{
+                                    top: buttonPosition.top - 300,
+                                    left: buttonPosition.left - 300,
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <p>
+                                    Are you sure you want to delete this task?
+                                </p>
+                                <div>
+                                    <button onClick={confirmDelete}>
+                                        Delete
+                                    </button>
+                                    <button onClick={cancelDelete}>
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </motion.div>
         </div>
