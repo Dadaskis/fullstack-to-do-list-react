@@ -2,6 +2,7 @@ class Server {
     processResponse(response) {
         // Log the raw response text
         return response.text().then((text) => {
+            console.log(text);
             try {
                 // Attempt to parse the text as JSON
                 let json = JSON.parse(text);

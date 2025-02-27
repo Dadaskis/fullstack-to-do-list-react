@@ -8,8 +8,17 @@ function TasksList({
     syncTasks,
     onDelete,
     onEdit,
-    onMobileDelete
+    onMobileDelete,
 }) {
+    if (tasks.length == 0) {
+        return (
+            <div className="tasks-list-body">
+                <center>
+                    <h2>No tasks?</h2>
+                </center>
+            </div>
+        );
+    }
     return (
         <div className="tasks-list-body">
             {tasks.map((task, index) => {
@@ -44,7 +53,9 @@ function TasksList({
                             onDelete(index);
                         }}
                         onEdit={(index) => onEdit(index)}
-                        onMobileDelete={(index, title) => onMobileDelete(index, title)}
+                        onMobileDelete={(index, title) =>
+                            onMobileDelete(index, title)
+                        }
                     />
                 );
             })}

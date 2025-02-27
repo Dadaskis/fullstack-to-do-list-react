@@ -21,10 +21,28 @@ function TaskManager() {
     const [removeTaskIndex, setRemoveTaskIndex] = useState(-1);
     const [removeTaskTitle, setRemoveTaskTitle] = useState("");
 
+    const updateAllTasks = () => {
+        server
+            .getJSON("/api/tasks.php", (data) => {
+                Utilities.printDataDebug("Tasks data acquired", data);
+                data.sort((a, b) => a.indexID - b.indexID);
+                data.forEach((task, index) => {
+                    task.index = index;
+                });
+                setTasks(data);
+            })
+            .catch((error) => {
+                setCantConnect(true); // Set the error state if the request fails
+            });
+    };
+
     const handleAddTask = (task) => {
         task.indexID = tasks.length;
         setIsAddFormOpen(false);
         server.postJSON("/api/tasks.php", task, (newTask) => {
+            if (newTask == undefined) {
+                return;
+            }
             const date = new Date();
 
             // Get local date and time components
@@ -42,6 +60,7 @@ function TaskManager() {
             newTask.creationDate = formattedDate;
             setTasks([...tasks, newTask]);
         });
+        updateAllTasks();
     };
 
     const handleEditTask = (index, task) => {
@@ -116,24 +135,13 @@ function TaskManager() {
 
     // Fetch tasks from the PHP API
     useEffect(() => {
-        server
-            .getJSON("/api/tasks.php", (data) => {
-                Utilities.printDataDebug("Tasks data acquired", data);
-                data.sort((a, b) => a.indexID - b.indexID);
-                data.forEach((task, index) => {
-                    task.index = index;
-                });
-                setTasks(data);
-            })
-            .catch((error) => {
-                setCantConnect(true); // Set the error state if the request fails
-            });
+        updateAllTasks();
     }, [server]);
 
     if (cantConnect === true) {
         return (
             <>
-                <h1>Task Manager is temporarily unavailable</h1>
+                <h1>Multiplayer Task Manager is temporarily unavailable</h1>
             </>
         );
     }
@@ -143,7 +151,7 @@ function TaskManager() {
             <DndProvider backend={HTML5Backend}>
                 <div className="task-manager-body">
                     <div className="task-manager-label-body">
-                        <h1 className="task-manager-label">Task Manager</h1>
+                        <h1 className="task-manager-label">Multiplayer Task Manager</h1>
                     </div>
                     {/* Form to add a new task */}
                     <Modal
@@ -215,7 +223,7 @@ function TaskManager() {
         console.error(ex);
         return (
             <>
-                <h1>Task Manager is temporarily unavailable</h1>
+                <h1>Multiplayer Task Manager is temporarily unavailable</h1>
                 <center>
                     <h1>Unknown error occured</h1>
                     <h2>{JSON.stringify(tasks)}</h2>

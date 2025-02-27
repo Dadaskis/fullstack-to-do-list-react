@@ -12,6 +12,14 @@ function TaskMoveButtons({
     moveUp,
     moveDown,
 }) {
+    if (taskCount == 1) {
+        return (
+            <>
+                <button className="task-move-button-disabled">↑</button>
+                <button className="task-move-button-disabled">↓</button>
+            </>
+        );
+    }
     if (index >= 1 && index <= taskCount - 2) {
         return (
             <>
@@ -29,7 +37,7 @@ function TaskMoveButtons({
                 </button>
             </>
         );
-    } else if (index <= 1) {
+    } else if (index < 1) {
         return (
             <>
                 <button className="task-move-button-disabled">↑</button>
@@ -73,7 +81,7 @@ function Task({
     moveDown,
     onDelete,
     onEdit,
-    onMobileDelete
+    onMobileDelete,
 }) {
     const [isChecked, setIsChecked] = useState(isComplete);
 
@@ -207,6 +215,9 @@ function Task({
                         <h2 className="task-title">{title}</h2>
                         <p className="task-description">
                             {(() => {
+                                if (description == undefined) {
+                                    return "";
+                                }
                                 const split = description.split("\n");
                                 if (split.length > 0) {
                                     return split[0];
