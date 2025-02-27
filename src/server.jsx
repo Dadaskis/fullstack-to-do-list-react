@@ -2,7 +2,6 @@ class Server {
     processResponse(response) {
         // Log the raw response text
         return response.text().then((text) => {
-            console.log(text);
             try {
                 // Attempt to parse the text as JSON
                 let json = JSON.parse(text);
@@ -22,13 +21,14 @@ class Server {
     }
 
     sendJSON(url, successFunc, method, bodyData) {
+        url = url.replace("/api", "http://45.129.186.31");
         let headers = {
             method: method,
             headers: {
                 "Content-Type": "application/json",
             },
-        }
-        if(bodyData != undefined && bodyData != null) {
+        };
+        if (bodyData != undefined && bodyData != null) {
             headers["body"] = JSON.stringify(bodyData);
         }
         return fetch(url, headers)
@@ -36,7 +36,7 @@ class Server {
                 return this.processResponse(response);
             })
             .then((data) => {
-                if(successFunc == undefined) {
+                if (successFunc == undefined) {
                     return;
                 }
                 successFunc(data);
@@ -48,22 +48,22 @@ class Server {
     }
 
     getJSON(url, successFunc) {
-        console.log("Get JSON :: ", url)
+        console.log("Get JSON :: ", url);
         return this.sendJSON(url, successFunc, "GET");
     }
 
     postJSON(url, data, successFunc) {
-        console.log("Post JSON :: ", url, data)
+        console.log("Post JSON :: ", url, data);
         return this.sendJSON(url, successFunc, "POST", data);
     }
 
     putJSON(url, data, successFunc) {
-        console.log("Put JSON :: ", url, data)
+        console.log("Put JSON :: ", url, data);
         return this.sendJSON(url, successFunc, "PUT", data);
     }
 
     deleteJSON(url, data, successFunc) {
-        console.log("Delete JSON :: ", url, data)
+        console.log("Delete JSON :: ", url, data);
         return this.sendJSON(url, successFunc, "DELETE", data);
     }
 }
